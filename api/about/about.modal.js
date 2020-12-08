@@ -18,7 +18,10 @@ const aboutSchema = Schema({
     otherName:String,
     quote:String,
     bloodDonations:String,
-    lifeEvents:Array
+    lifeEvents:Array,
+    birthDate:String,
+    language:Array,
+    gender:String
 
 }, { timestamps: {createdAt:'created_at'} })
 

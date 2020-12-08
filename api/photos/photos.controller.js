@@ -30,6 +30,33 @@ export const showphotos = async (req,res) =>{
         console.log("user not found");
     }
     else if(postData.length>0){
+      for(var s=0;s<postData.length;s++){
+          const temp=[]
+          for(var h=0;h<postData[s].imageUrl.length;h++){
+              console.log(postData[s].imageUrl[h]);
+              const t={image:"",thumbImage:"",size:""};
+              if(postData[s].imageUrl.length==1)
+              {
+                  t['size']=100
+              }
+              else if(postData[s].imageUrl.length==2 || postData[s].imageUrl.length>=4){
+                  t['size']=50
+              }
+              else if(postData[s].imageUrl.length==3){
+                  if(h==0){
+                      t['size']=100
+                  }
+                  else{
+                      t['size']=50
+                  }
+              }
+
+              t['image']=postData[s].imageUrl[h];
+              t['thumbImage']=postData[s].imageUrl[h];
+              temp.push(t);
+          }
+          postData[s].imageUrl=temp
+      }
       res.send(postData.reverse())
     }
     else{
@@ -57,6 +84,33 @@ export const showphotosprofile = async (req,res) =>{
         console.log("post data not found");
     }
     else{
+      for(var s=0;s<postData.length;s++){
+          const temp=[]
+          for(var h=0;h<postData[s].imageUrl.length;h++){
+              console.log(postData[s].imageUrl[h]);
+              const t={image:"",thumbImage:"",size:""};
+              if(postData[s].imageUrl.length==1)
+              {
+                  t['size']=100
+              }
+              else if(postData[s].imageUrl.length==2 || postData[s].imageUrl.length>=4){
+                  t['size']=50
+              }
+              else if(postData[s].imageUrl.length==3){
+                  if(h==0){
+                      t['size']=100
+                  }
+                  else{
+                      t['size']=50
+                  }
+              }
+
+              t['image']=postData[s].imageUrl[h];
+              t['thumbImage']=postData[s].imageUrl[h];
+              temp.push(t);
+          }
+          postData[s].imageUrl=temp
+      }
         res.send(postData.reverse())
     }
     }
@@ -425,7 +479,7 @@ export const homePagePost = async (req,res) =>{
         const userId = user._id;
         var homePost = [];
         const Friend = await FriendList.findOne({userId:userId})
-        console.log(Friend);
+        // console.log(Friend);
         if(Friend == null){
           res.status(201).send({
               success:true,
@@ -433,16 +487,32 @@ export const homePagePost = async (req,res) =>{
           })
         }
         var fList=Friend.friendList;
-        console.log(fList);
         for(var i = 0;i<fList.length;i++){
-            console.log(fList[i].friendId);
             var post =await photosList.find({userId:fList[i].friendId})
             for(var j = 0;j<post.length;j++){
+                var location = await Users.findById({_id:post[j].userId})
+                if(location.length<=0){
+                    res.status(401).send({
+                        success:false,
+                        message:"user data not found"
+                    })
+                }
+                post[j].city=location.city
+                post[j].state=location.state
                 homePost.push(post[j]);
             }
         }
         var userPost = await photosList.find({userId:userId})
         for(var j = 0;j<userPost.length;j++){
+            var location = await Users.findById({_id:userPost[j].userId})
+            if(location.length<=0){
+                res.status(401).send({
+                    success:false,
+                    message:"user data not found"
+                })
+            }
+            userPost[j].city=location.city
+            userPost[j].state=location.state
             homePost.push(userPost[j]);
         }
             var sortedpost = homePost.sort(function (var1, var2) {
@@ -453,7 +523,33 @@ export const homePagePost = async (req,res) =>{
                 return 1;
                 return 0;
             });
-            console.log(sortedpost);
+            for(var s=0;s<sortedpost.length;s++){
+                const temp=[]
+                for(var h=0;h<sortedpost[s].imageUrl.length;h++){
+                    console.log(sortedpost[s].imageUrl[h]);
+                    const t={image:"",thumbImage:"",size:""};
+                    if(sortedpost[s].imageUrl.length==1)
+                    {
+                        t['size']=100
+                    }
+                    else if(sortedpost[s].imageUrl.length==2 || sortedpost[s].imageUrl.length>=4){
+                        t['size']=50
+                    }
+                    else if(sortedpost[s].imageUrl.length==3){
+                        if(h==0){
+                            t['size']=100
+                        }
+                        else{
+                            t['size']=50
+                        }
+                    }
+
+                    t['image']=sortedpost[s].imageUrl[h];
+                    t['thumbImage']=sortedpost[s].imageUrl[h];
+                    temp.push(t);
+                }
+                sortedpost[s].imageUrl=temp
+            }
             return res.status(201).send({
                 success: true,
                 message: "successfully.",

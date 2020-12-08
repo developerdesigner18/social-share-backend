@@ -60,8 +60,6 @@ const uploadPostImg = multer ({
     }
 })
 
-
-
 // photosRouter.post('/newPosts',uploadPostImg.single('Url'),newPosts)
 photosRouter.post('/comment',Addcomment)
 photosRouter.post("/bid",newBid)
@@ -70,5 +68,5 @@ photosRouter.post("/share",sharing)
 photosRouter.get("/show",showphotos)
 photosRouter.get("/userPhoto",userUploadedPhotos)
 photosRouter.get("/showPost",showphotosprofile)
-photosRouter.get("/homePost",homePagePost)
+photosRouter.get("/homePagePost",homePagePost)
 photosRouter.post('/newPosts',uploadPostImg.array('Url',12),newPosts)

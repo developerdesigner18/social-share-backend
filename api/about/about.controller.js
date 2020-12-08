@@ -146,10 +146,14 @@ export const deleteHighSchool = async (req,res) =>{
 
 //-------------------------------------------------------single String add -----------------------------------------------------------------------
 async function aboutMe(userid,key,value){
-    console.log("=-=-=-=-key", key);
-    await about.findOneAndUpdate({userId:userid},{
-        $set:{[key] : value}
-    })
+  var data = await about.find({userId:userid})
+    if(data.length!=0){
+        await about.findOneAndUpdate({userId:userid},{
+            $set:{[key] : value}
+        })
+    }else{
+        await about.create({userId:userid,[key] : value})
+    }
 }
 async function deleteAboutMe(userid,key,value){
     console.log(key);
@@ -207,5 +211,84 @@ export const deleteAbout = async(req,res) =>{
             success:false,
             message:err.message
         })
+    }
+}
+
+export const getAboutData = async (req,res) =>{
+    try{
+        // const decoded = await jwt.verify(req.headers.token, configKey.secrets.JWT_SECRET);
+        // const user = await Users.findOne({emailId:decoded.sub})
+        // const userid = user._id
+        const userId = req.body.userId
+        // const decoded = await jwt.verify(req.headers.token, configKey.secrets.JWT_SECRET);
+        const data= await about.find({userId:userid});
+        if(!data){
+            console.log("data not found");
+        }
+        res.status(201).send({
+            success:true,
+            message:'data fetched successfully',
+            userData:data
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,message:err.message
+        });
+    }
+}
+
+//add in user about
+export const addSingleArray = async (req,res) =>{
+    try{
+        const {userId,fieldName} = req.body;
+        const {name}=req.body
+        var data ={_id: mongoose.Types.ObjectId(),name:name};
+        checkUserData(userId);
+        const userdata= await about.findOne({userId:userId})
+        addData(userId,data,fieldName);
+        res.status(201).send({
+            success:true,
+            message:'data add successfully',
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,message:err.message
+        });
+    }
+}
+// update in user about
+export const updateSingleArray = async (req,res) =>{
+    try{
+        const {userId,dataId,fieldName} = req.body;
+        const {name}=req.body
+        var data =JSON.parse('{'+'"'+`${fieldName}.$.name`+'":"'+name+'"}');
+        updateData(userId,dataId,data,`${fieldName}._id`)
+        res.status(201).send({
+            success:true,
+            message:'update data successfully',
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,message:err.message
+        });
+    }
+}
+//delete in user about
+export const deleteSingleArray = async (req,res) =>{
+    try{
+        const {userId,dataId,fieldName} = req.body;
+        deleteData(userId,fieldName,dataId)
+        res.status(201).send({
+            success:true,
+            message:'delete data successfully',
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,message:err.message
+        });
     }
 }

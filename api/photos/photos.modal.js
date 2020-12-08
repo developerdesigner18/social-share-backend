@@ -12,7 +12,9 @@ const photosSchema = Schema({
     comment:Array,
     share:Array,
     category:String,
-    highBid:Number
+    highBid:Number,
+    city:String,
+    state:String
 
 }, { timestamps: {createdAt:'created_at'} })
 

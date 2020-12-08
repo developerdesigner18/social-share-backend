@@ -410,10 +410,10 @@ export const showRequestedFriEndData = async(req,res) =>{
         var dataR = [];
         const Friend = await FriendList.findOne({userId:userId})
         var fList=Friend.getRequest;
-        console.log(fList);
+        console.log("=-=-=-fList",fList);
         for(var i = 0;i<fList.length;i++){
             var d =await Users.findById({_id:fList[i].friendId},{name:1,profileImgURl:1})
-            console.log(d);
+            console.log("-=-=-=-=-=",d);
             dataR.push(d)
         }
         console.log(dataR);
