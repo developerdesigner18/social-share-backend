@@ -219,7 +219,7 @@ export const getAboutData = async (req,res) =>{
         // const decoded = await jwt.verify(req.headers.token, configKey.secrets.JWT_SECRET);
         // const user = await Users.findOne({emailId:decoded.sub})
         // const userid = user._id
-        const userId = req.body.userId
+        const userid = req.body.userid
         // const decoded = await jwt.verify(req.headers.token, configKey.secrets.JWT_SECRET);
         const data= await about.find({userId:userid});
         if(!data){
